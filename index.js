@@ -6,16 +6,19 @@ import PropTypes from 'prop-types';
 
 export default class FlatListFast extends Component {
     static propTypes = {
-        itemOnePage: PropTypes.number.isRequired
+        itemOnePage: PropTypes.number.isRequired,
+        initNumberRender: PropTypes.number,
     }
 
     constructor(props) {
         super(props);
 
         this.loadMore = this.loadMore.bind(this);
+        this.getCurrentNumberItem = this.getCurrentNumberItem.bind(this);
 
-        this.currentIndex = 1;
-        this.currentData = this.getPartOfList(this.currentIndex * this.props.itemOnePage, this.props.data);
+        this.initNumberRender = this.props.initNumberRender || this.props.itemOnePage;
+        this.currentIndex = 0;
+        this.currentData = this.getPartOfList(this.initNumberRender, this.props.data);
     }
 
     getPartOfList(count, listData) {
@@ -26,17 +29,28 @@ export default class FlatListFast extends Component {
         return cloneList;
     }
 
+    getCurrentNumberItem() {
+        return this.initNumberRender + this.currentIndex * this.props.itemOnePage;
+    }
+
     loadMore() {
-        if (this.currentIndex * this.props.itemOnePage >= this.props.data.length) return;
+        if (this.getCurrentNumberItem() >= this.props.data.length) return;
         this.currentIndex++;
-        this.currentData = this.getPartOfList(this.currentIndex * this.props.itemOnePage, this.props.data);
+        this.currentData = this.getPartOfList(this.getCurrentNumberItem(), this.props.data);
         this.setState({});
     }
 
     componentWillReceiveProps(nextProps) {
-        const maxIndex = nextProps.data.length / nextProps.itemOnePage + 1;
+        this.initNumberRender = nextProps.initNumberRender || nextProps.itemOnePage;
+        this.props.itemOnePage = nextProps.itemOnePage;
+
+        const maxIndex = this.initNumberRender >= nextProps.data.length
+            ? 0
+            : (nextProps.data.length - this.initNumberRender) / nextProps.itemOnePage + 1;
+
         if (this.currentIndex > maxIndex) this.currentIndex = maxIndex;
-        this.currentData = this.getPartOfList(this.currentIndex * nextProps.itemOnePage, nextProps.data);
+
+        this.currentData = this.getPartOfList(this.getCurrentNumberItem(), nextProps.data);
     }
 
     render() {
