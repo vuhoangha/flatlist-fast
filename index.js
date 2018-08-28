@@ -27,9 +27,9 @@ export default class FlatListFast extends Component {
     }
 
     loadMore() {
-        if (this.currentIndex * this.itemOnePage >= this.props.data.length) return;
+        if (this.currentIndex * this.props.itemOnePage >= this.props.data.length) return;
         this.currentIndex++;
-        this.currentData = this.getPartOfList(this.currentIndex * this.itemOnePage, this.props.data);
+        this.currentData = this.getPartOfList(this.currentIndex * this.props.itemOnePage, this.props.data);
         this.setState({});
     }
 
