@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 export default class FlatListFast extends Component {
     static propTypes = {
         itemOnePage: PropTypes.number.isRequired,
-        initNumberRender: PropTypes.number,
+        initialNumToRender: PropTypes.number,
     }
 
     constructor(props) {
@@ -16,9 +16,9 @@ export default class FlatListFast extends Component {
         this.loadMore = this.loadMore.bind(this);
         this.getCurrentNumberItem = this.getCurrentNumberItem.bind(this);
 
-        this.initNumberRender = this.props.initNumberRender || this.props.itemOnePage;
+        this.initialNumToRender = this.props.initialNumToRender || this.props.itemOnePage;
         this.currentIndex = 0;
-        this.currentData = this.getPartOfList(this.initNumberRender, this.props.data);
+        this.currentData = this.getPartOfList(this.initialNumToRender, this.props.data);
     }
 
     getPartOfList(count, listData) {
@@ -30,7 +30,7 @@ export default class FlatListFast extends Component {
     }
 
     getCurrentNumberItem() {
-        return this.initNumberRender + this.currentIndex * this.props.itemOnePage;
+        return this.initialNumToRender + this.currentIndex * this.props.itemOnePage;
     }
 
     loadMore() {
@@ -41,12 +41,12 @@ export default class FlatListFast extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.initNumberRender = nextProps.initNumberRender || nextProps.itemOnePage;
+        this.initialNumToRender = nextProps.initialNumToRender || nextProps.itemOnePage;
         this.props.itemOnePage = nextProps.itemOnePage;
 
-        const maxIndex = this.initNumberRender >= nextProps.data.length
+        const maxIndex = this.initialNumToRender >= nextProps.data.length
             ? 0
-            : (nextProps.data.length - this.initNumberRender) / nextProps.itemOnePage + 1;
+            : (nextProps.data.length - this.initialNumToRender) / nextProps.itemOnePage + 1;
 
         if (this.currentIndex > maxIndex) this.currentIndex = maxIndex;
 
