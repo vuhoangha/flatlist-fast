@@ -5,9 +5,13 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
-  "dependencies": {
-    "react": "16.4.1",
-    "react-native": "0.56.0"
+  "devDependencies": {
+    "react": "^16.4.1",
+    "react-native": "^0.56.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
   },
   "repository": {
     "type": "git",
